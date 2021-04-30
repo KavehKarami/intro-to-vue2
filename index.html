@@ -18,7 +18,28 @@
 
         <div class="product-info">
           <h1>{{product}}</h1>
-          <a :href="link" target="_blank">More products like this</a>
+          <!-- NOTE: Frist Way -->
+          <!-- <p>
+            {{
+             inventory > 10 ? "In Stock" :
+             inventory <= 10 && inventory > 0 ? "almost sold out" :
+             "out of order"
+            }}
+          </p> -->
+          <!-- NOTE: Second Way: generate true condition element with js -->
+          <!-- <p v-if="inventory > 10">In Stock</p>
+          <p v-else-if="inventory <= 10 && inventory > 0">almost sold out</p>
+          <p v-else>out of order</p> -->
+
+          <!-- NOTE: Third Way: display none when condition not hold true -->
+          <!-- <p v-show="inventory > 10">In Stock</p>
+          <p v-show="inventory <= 10 && inventory > 0">almost sold out</p>
+          <p v-show="inventory === 0">out of order</p> -->
+
+          <p v-show="inStock">In Stock</p>
+          <span v-if="onSale">on sale</span>
+
+          <!-- <a :href="link" target="_blank">More products like this</a> -->
         </div>
       </div>
     </div>
@@ -32,6 +53,9 @@
           image: "./images/vmSocks-green-onWhite.jpg",
           link:
             "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
+          inventory: 11,
+          inStock: true,
+          onSale: true,
         },
       });
     </script>
