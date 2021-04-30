@@ -44,12 +44,25 @@
           </ul>
 
           <div v-for="variant in variants" :key="variant.variantId">
-            {{variant.variantColor}}
+            <p @mouseover="variantHover(variant)">{{variant.variantColor}}</p>
           </div>
 
           <ul>
             <li v-for="size in sizes" :key="size.id">{{size.value}}</li>
           </ul>
+
+          <button v-on:click="addToCard">Add To Card</button>
+          <button
+            v-on:click="removeFromCard"
+            :class="{disabledButton: card === 0}"
+            :disabled="card === 0 && true"
+          >
+            Decrement From Card
+          </button>
+
+          <div class="cart">
+            <p>Card({{card}})</p>
+          </div>
 
           <!-- <a :href="link" target="_blank">More products like this</a> -->
         </div>
@@ -73,10 +86,14 @@
             {
               variantId: 2234,
               variantColor: "green",
+              variantImage:
+                "https://www.vuemastery.com/images/challenges/vmSocks-green-onWhite.jpg",
             },
             {
               variantId: 2235,
               variantColor: "blue",
+              variantImage:
+                "https://www.vuemastery.com/images/challenges/vmSocks-blue-onWhite.jpg",
             },
           ],
           sizes: [
@@ -86,6 +103,19 @@
             { value: "xl", id: 4 },
             { value: "xxl", id: 5 },
           ],
+          card: 0,
+        },
+
+        methods: {
+          addToCard: function () {
+            this.card += 1;
+          },
+          removeFromCard() {
+            this.card -= 1;
+          },
+          variantHover: function (variant) {
+            this.image = variant.variantImage;
+          },
         },
       });
     </script>
