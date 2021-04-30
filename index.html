@@ -198,7 +198,8 @@
           },
           decrementCard(id) {
             let index = this.card.findIndex((item) => item === id);
-            this.card.splice(index, 1);
+
+            if (index !== -1) this.card.splice(index, 1);
           },
         },
       });
