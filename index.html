@@ -4,13 +4,23 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./product_style.css" />
     <title>Vue Practice</title>
   </head>
   <body>
+    <div class="nav-bar"></div>
+
     <div id="app">
-      <h1>Products Here: {{ product }}</h1>
-      <h4>{{ description }}</h4>
-      <p>I Love my {{ product }}</p>
+      <div class="product">
+        <div class="product-image">
+          <img v-bind:src="image" :alt="product" />
+        </div>
+
+        <div class="product-info">
+          <h1>{{product}}</h1>
+          <a :href="link" target="_blank">More products like this</a>
+        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -18,8 +28,10 @@
       const app = new Vue({
         el: "#app",
         data: {
-          product: "Suit",
-          description: "This is a Description"
+          product: "Socks",
+          image: "./images/vmSocks-green-onWhite.jpg",
+          link:
+            "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
         },
       });
     </script>
