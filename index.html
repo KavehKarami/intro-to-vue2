@@ -39,6 +39,18 @@
           <p v-show="inStock">In Stock</p>
           <span v-if="onSale">on sale</span>
 
+          <ul>
+            <li v-for="detail in details">{{detail}}</li>
+          </ul>
+
+          <div v-for="variant in variants" :key="variant.variantId">
+            {{variant.variantColor}}
+          </div>
+
+          <ul>
+            <li v-for="size in sizes" :key="size.id">{{size.value}}</li>
+          </ul>
+
           <!-- <a :href="link" target="_blank">More products like this</a> -->
         </div>
       </div>
@@ -56,6 +68,24 @@
           inventory: 11,
           inStock: true,
           onSale: true,
+          details: ["80% cotton", "20% polyester", "Gender-neutral"],
+          variants: [
+            {
+              variantId: 2234,
+              variantColor: "green",
+            },
+            {
+              variantId: 2235,
+              variantColor: "blue",
+            },
+          ],
+          sizes: [
+            { value: "sm", id: 1 },
+            { value: "md", id: 2 },
+            { value: "lg", id: 3 },
+            { value: "xl", id: 4 },
+            { value: "xxl", id: 5 },
+          ],
         },
       });
     </script>
