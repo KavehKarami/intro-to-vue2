@@ -36,22 +36,35 @@
           <p v-show="inventory <= 10 && inventory > 0">almost sold out</p>
           <p v-show="inventory === 0">out of order</p> -->
 
-          <p v-show="inStock">In Stock</p>
-          <span v-if="onSale">on sale</span>
+          <!-- <p v-show="inStock">In Stock</p>
+          <span v-if="onSale">on sale</span> -->
+
+          <p v-if="inStock">In Stock</p>
+          <p v-else :class="{lineThrough: !inStock}">Out of Stock</p>
 
           <ul>
             <li v-for="detail in details">{{detail}}</li>
           </ul>
 
-          <div v-for="variant in variants" :key="variant.variantId">
-            <p @mouseover="variantHover(variant)">{{variant.variantColor}}</p>
-          </div>
+          <div
+            v-for="variant in variants"
+            class="color-box"
+            :style="{backgroundColor: variant.variantColor}"
+            :key="variant.variantId"
+            @mouseover="variantHover(variant)"
+          ></div>
 
           <ul>
             <li v-for="size in sizes" :key="size.id">{{size.value}}</li>
           </ul>
 
-          <button v-on:click="addToCard">Add To Card</button>
+          <button
+            v-on:click="addToCard"
+            :class="[!inStock && 'disabledButton']"
+            :disabled="!inStock"
+          >
+            Add To Card
+          </button>
           <button
             v-on:click="removeFromCard"
             :class="{disabledButton: card === 0}"
