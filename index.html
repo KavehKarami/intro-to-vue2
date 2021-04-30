@@ -17,7 +17,7 @@
         </div>
 
         <div class="product-info">
-          <h1>{{product}}</h1>
+          <h1>{{title}}</h1>
           <!-- NOTE: Frist Way -->
           <!-- <p>
             {{
@@ -38,20 +38,20 @@
 
           <!-- <p v-show="inStock">In Stock</p>
           <span v-if="onSale">on sale</span> -->
-
           <p v-if="inStock">In Stock</p>
           <p v-else :class="{lineThrough: !inStock}">Out of Stock</p>
+          <p>{{sale}}</p>
 
           <ul>
             <li v-for="detail in details">{{detail}}</li>
           </ul>
 
           <div
-            v-for="variant in variants"
+            v-for="(variant, index) in variants"
             class="color-box"
             :style="{backgroundColor: variant.variantColor}"
             :key="variant.variantId"
-            @mouseover="variantHover(variant)"
+            @mouseover="updateProduct(index)"
           ></div>
 
           <ul>
@@ -87,12 +87,10 @@
       const app = new Vue({
         el: "#app",
         data: {
+          brand: "Vue Mastery",
           product: "Socks",
-          image: "./images/vmSocks-green-onWhite.jpg",
-          link:
-            "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
+          selectedVariant: 0,
           inventory: 11,
-          inStock: true,
           onSale: true,
           details: ["80% cotton", "20% polyester", "Gender-neutral"],
           variants: [
@@ -101,12 +99,14 @@
               variantColor: "green",
               variantImage:
                 "https://www.vuemastery.com/images/challenges/vmSocks-green-onWhite.jpg",
+              quantity: 20,
             },
             {
               variantId: 2235,
               variantColor: "blue",
               variantImage:
                 "https://www.vuemastery.com/images/challenges/vmSocks-blue-onWhite.jpg",
+              quantity: 0,
             },
           ],
           sizes: [
@@ -126,8 +126,26 @@
           removeFromCard() {
             this.card -= 1;
           },
-          variantHover: function (variant) {
-            this.image = variant.variantImage;
+          updateProduct: function (index) {
+            this.selectedVariant = index;
+          },
+        },
+
+        computed: {
+          title() {
+            return this.brand + " " + this.product;
+          },
+          image() {
+            return this.variants[this.selectedVariant].variantImage;
+          },
+          inStock() {
+            return this.variants[this.selectedVariant].quantity;
+          },
+          sale() {
+            if (this.onSale) {
+              return this.brand + " " + this.product + " are on sale!";
+            }
+            return this.brand + " " + this.product + " are not on sale";
           },
         },
       });
