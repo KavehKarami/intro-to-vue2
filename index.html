@@ -24,6 +24,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
+      var eventBus = new Vue();
+
       Vue.component("product", {
         props: {
           premium: {
@@ -62,9 +64,7 @@
               <p v-if="inStock">In Stock</p>
               <p v-else :class="{lineThrough: !inStock}">Out of Stock</p>
               <p>{{sale}}</p>
-              <p>Shipping: {{shipping}}</p>
-
-              <product-details :details="details"></product-details>
+              
 
               <div
                 v-for="(variant, index) in variants"
@@ -93,19 +93,7 @@
               <!-- <a :href="link" target="_blank">More products like this</a> -->
               </div>
 
-              <div>
-                <h2>Reviews</h2>
-                <p v-if="!reviews.length">There are no reviews yet.</p>
-                <ul v-else>
-                    <li v-for="(review, index) in reviews" :key="index">
-                      <p>{{ review.name }}</p>
-                      <p>Rating:{{ review.rating }}</p>
-                      <p>{{ review.review }}</p>
-                      <p>is recommended: {{ review.recommend }}</p>
-                    </li>
-                </ul>
-              </div>
-              <product-review @review-submitted="addReview"></product-review>
+              <product-tabs :reviews="reviews"></product-tabs>
           </div>
         `,
         data() {
@@ -187,6 +175,11 @@
             }
             return "2.99$";
           },
+        },
+        mounted() {
+          eventBus.$on("review-submitted", (productReview) => {
+            this.reviews.push(productReview);
+          });
         },
       });
 
@@ -271,7 +264,7 @@
                 review: this.review,
                 recommend: this.recommend,
               };
-              this.$emit("review-submitted", data);
+              eventBus.$emit("review-submitted", data);
               this.name = null;
               this.rating = null;
               this.review = null;
@@ -283,6 +276,82 @@
               if (!this.recommend) this.errors.push("recommend required.");
             }
           },
+        },
+      });
+
+      Vue.component("details-tab", {
+        template: `
+        <div>
+          <span
+            class="tabs" 
+            :class="{ activeTab: selectedTab === tab }"
+            v-for="(tab, index) in tabs"
+            :key="index"
+            @click="selectedTab = tab"
+          >
+            {{ tab }}
+          </span>
+
+          <p v-show="selectedTab === 'shipping'">Shipping: {{shipping}}</p>
+          
+          <div v-show="selectedTab === 'Details'">
+            <product-details :details="details"></product-details>
+          </div>
+        </div>
+        `,
+
+        data() {
+          return {
+            tabs: ["Shipping", "Details"],
+            selectedTab: "Shipping",
+          }
+        }
+      })
+
+      Vue.component("product-tabs", {
+        props: {
+          reviews: {
+            type: Array,
+            required: false,
+          },
+        },
+        template: `
+      <div>
+      
+        <div>
+          <span
+            class="tabs" 
+            :class="{ activeTab: selectedTab === tab }"
+            v-for="(tab, index) in tabs"
+            :key="index"
+            @click="selectedTab = tab"
+          >
+            {{ tab }}
+          </span>
+        </div>
+
+        <div v-show="selectedTab === 'Reviews'">
+            <p v-if="!reviews.length">There are no reviews yet.</p>
+            <ul v-else>
+                <li v-for="review in reviews">
+                  <p>{{ review.name }}</p>
+                  <p>Rating:{{ review.rating }}</p>
+                  <p>{{ review.review }}</p>
+                </li>
+            </ul>
+        </div>
+
+        <div v-show="selectedTab === 'Make a Review'">
+          <product-review></product-review>
+        </div>
+    
+      </div>
+    `,
+        data() {
+          return {
+            tabs: ["Reviews", "Make a Review"],
+            selectedTab: "Reviews",
+          };
         },
       });
 
